@@ -176,10 +176,14 @@ export class Panel extends React.Component<Props, State> {
     }
   }
 
-  openRewardsPage () {
+  openRewardsPage (id?: string) {
     chrome.tabs.create({
-      url: 'chrome://rewards'
+      url: 'brave://rewards'
     })
+
+    if (id) {
+      this.onCloseNotification(id)
+    }
   }
 
   openRewardsAddFundsPage () {
@@ -236,6 +240,9 @@ export class Panel extends React.Component<Props, State> {
       case 'backupWallet':
         clickEvent = this.onBackupWallet.bind(this, id)
         break
+      case 'ads-launch':
+        clickEvent = this.openRewardsPage.bind(this, id)
+        break
       default:
         clickEvent = undefined
         break
@@ -260,6 +267,7 @@ export class Panel extends React.Component<Props, State> {
     let type: NotificationType = ''
     let text = ''
     let isAlert = ''
+
     switch (notification.type) {
       case RewardsNotificationType.REWARDS_NOTIFICATION_AUTO_CONTRIBUTE: {
         if (!notification.args ||
@@ -311,6 +319,10 @@ export class Panel extends React.Component<Props, State> {
       case RewardsNotificationType.REWARDS_NOTIFICATION_TIPS_PROCESSED:
         type = 'tipsProcessed'
         text = getMessage('tipsProcessedNotification')
+        break
+      case RewardsNotificationType.REWARDS_NOTIFICATION_ADS_LAUNCH:
+        type = 'ads-launch'
+        text = getMessage('braveAdsLaunchMsg')
         break
       default:
         type = ''
@@ -411,6 +423,10 @@ export class Panel extends React.Component<Props, State> {
       ? this.generateAmounts(publisher)
       : undefined
 
+    if (notificationType === 'ads-launch') {
+      delete notification.notification['date']    
+    }
+  
     const pendingTotal = parseFloat(
       (pendingContributionTotal || 0).toFixed(1))
 

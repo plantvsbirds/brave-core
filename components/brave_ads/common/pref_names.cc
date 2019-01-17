@@ -16,6 +16,10 @@ const char kBraveAdsIdleThreshold[] = "brave.brave_ads.idle_threshold";
 const int kBraveAdsPrefsDefaultVersion = 1;
 const int kBraveAdsPrefsCurrentVersion = 2;
 const char kBraveAdsPrefsVersion[] = "brave.brave_ads.prefs.version";
+const char kBraveAdsShowAdsNotification[] =
+    "brave.brave_ads.show_ads_notification";
+const char kBraveAdsLaunchNotificationTimestamp[] =
+    "brave.brave_ads.launch_notification_timestamp";
 
 }  // namespace prefs
 

@@ -17,6 +17,8 @@ extern const char kBraveAdsIdleThreshold[];
 extern const int kBraveAdsPrefsDefaultVersion;
 extern const int kBraveAdsPrefsCurrentVersion;
 extern const char kBraveAdsPrefsVersion[];
+extern const char kBraveAdsShowAdsNotification[];
+extern const char kBraveAdsLaunchNotificationTimestamp[];
 
 }  // namespace prefs
 

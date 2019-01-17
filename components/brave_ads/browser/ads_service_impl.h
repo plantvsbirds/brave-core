@@ -19,6 +19,7 @@
 #include "brave/components/brave_ads/browser/ads_service.h"
 #include "brave/components/brave_ads/browser/background_helper.h"
 #include "brave/components/services/bat_ads/public/interfaces/bat_ads.mojom.h"
+#include "brave/components/brave_rewards/browser/rewards_notification_service_observer.h"
 #include "chrome/browser/notifications/notification_handler.h"
 #include "components/history/core/browser/history_service_observer.h"
 #include "components/prefs/pref_change_registrar.h"
@@ -28,6 +29,8 @@
 #if !defined(OS_ANDROID)
 #include "ui/base/idle/idle.h"
 #endif
+
+using brave_rewards::RewardsNotificationService;
 
 class NotificationDisplayService;
 class Profile;
@@ -159,6 +162,11 @@ class AdsServiceImpl : public AdsService,
   void OnBackground() override;
   void OnForeground() override;
 
+  // RewardsNotificationServerObserver impl
+  void OnNotificationDeleted(
+      RewardsNotificationService* rewards_notification_service,
+      const RewardsNotificationService::RewardsNotification& notification);
+
   void OnGetAdsForCategory(const ads::OnGetAdsCallback& callback,
                            const std::string& category,
                            const std::vector<ads::AdInfo>& ads);
@@ -181,6 +189,10 @@ class AdsServiceImpl : public AdsService,
   void MaybeStart(bool restart);
   void NotificationTimedOut(uint32_t timer_id,
                             const std::string& notification_id);
+  bool ShouldShowAdsNotification() const;
+  void MaybeShowFirstLaunchNotification();
+  void FirstLaunchNotificationTimedOut(uint32_t timer_id,
+                                       const std::string& notification_id);
 
   uint32_t next_timer_id();
 

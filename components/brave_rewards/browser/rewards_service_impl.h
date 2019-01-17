@@ -439,6 +439,7 @@ class RewardsServiceImpl : public RewardsService,
   void MaybeShowNotificationAddFunds();
   bool ShouldShowNotificationAddFunds() const;
   void ShowNotificationAddFunds(bool sufficient);
+  void MaybeShowFirstLaunchNotification();
 
   void MaybeShowNotificationTipsPaid();
   void ShowNotificationTipsPaid(bool ac_enabled);
