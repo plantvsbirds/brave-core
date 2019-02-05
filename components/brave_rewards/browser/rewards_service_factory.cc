@@ -39,7 +39,8 @@ RewardsServiceFactory* RewardsServiceFactory::GetInstance() {
 RewardsServiceFactory::RewardsServiceFactory()
     : BrowserContextKeyedServiceFactory(
           "RewardsService",
-          BrowserContextDependencyManager::GetInstance()) {
+          BrowserContextDependencyManager::GetInstance()),
+      testing_service_(NULL) {
 #if BUILDFLAG(ENABLE_EXTENSIONS)
   DependsOn(extensions::EventRouterFactory::GetInstance());
 #endif
@@ -50,6 +51,10 @@ RewardsServiceFactory::~RewardsServiceFactory() {
 
 KeyedService* RewardsServiceFactory::BuildServiceInstanceFor(
     content::BrowserContext* context) const {
+  if (testing_service_) {
+    testing_service_->Init();
+    return testing_service_;
+  }
 #if BUILDFLAG(BRAVE_REWARDS_ENABLED)
   std::unique_ptr<RewardsServiceImpl> rewards_service(
       new RewardsServiceImpl(Profile::FromBrowserContext(context)));
@@ -58,6 +63,13 @@ KeyedService* RewardsServiceFactory::BuildServiceInstanceFor(
 #else
   return NULL;
 #endif
+}
+
+void RewardsServiceFactory::SetServiceForTesting(RewardsServiceImpl* service) {
+  if (service == NULL)
+    return;
+
+  testing_service_ = service;
 }
 
 content::BrowserContext* RewardsServiceFactory::GetBrowserContextToUse(

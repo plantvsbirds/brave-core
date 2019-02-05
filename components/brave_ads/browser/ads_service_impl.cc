@@ -389,7 +389,7 @@ void AdsServiceImpl::Start() {
   if (command_line.HasSwitch(switches::kDebug)) {
     is_debug = true;
   }
-  if (command_line.HasSwitch(switches::kTesting)) {
+  if (IsTestingEnv()) {
     is_testing = true;
   }
 
@@ -428,10 +428,7 @@ void AdsServiceImpl::MaybeShowFirstLaunchNotification() {
       args,
       rewards_notification_ads_launch);
 
-  const base::CommandLine& command_line =
-      *base::CommandLine::ForCurrentProcess();
-
-  uint32_t timeout_length = command_line.HasSwitch(switches::kTesting)
+  uint32_t timeout_length = IsTestingEnv()
       ? (5 * 60) /* 5 minutes */
       : (24 * 60 * 60 * 7); /* 7 days */
 
@@ -469,6 +466,12 @@ void AdsServiceImpl::OnNotificationDeleted(
     profile_->GetPrefs()->SetBoolean(
       prefs::kBraveAdsShowAdsNotification, false);
   }
+}
+
+bool AdsServiceImpl::IsTestingEnv() {
+  const base::CommandLine& command_line =
+      *base::CommandLine::ForCurrentProcess();
+  return command_line.HasSwitch(switches::kTesting);
 }
 
 void AdsServiceImpl::Stop() {

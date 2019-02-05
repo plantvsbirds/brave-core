@@ -26,12 +26,9 @@ export const getUIMessages = (): Record<string, string> => {
     'backupNow',
     'backupWalletNotification',
     'backupWalletTitle',
-<<<<<<< HEAD
     'bat',
-=======
     'braveAdsLaunchTitle',
     'braveAdsLaunchMsg',
->>>>>>> Fixes brave-browser/issues#2914, adds launch notification for Rewards users about Ads
     'braveAdsTitle',
     'braveContributeTitle',
     'braveRewards',

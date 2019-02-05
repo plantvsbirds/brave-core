@@ -76,6 +76,7 @@ class AdsServiceImpl : public AdsService,
   void SetConfirmationsIsReady(const bool is_ready) override;
   void IsSupportedRegion(
       IsSupportedRegionCallback callback) override;
+  bool IsTestingEnv() override;
 
   void Shutdown() override;
 

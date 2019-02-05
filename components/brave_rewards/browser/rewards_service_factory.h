@@ -7,6 +7,7 @@
 
 #include "base/memory/singleton.h"
 #include "components/keyed_service/content/browser_context_keyed_service_factory.h"
+#include "brave/components/brave_rewards/browser/rewards_service_impl.h"
 
 class Profile;
 
@@ -21,6 +22,8 @@ class RewardsServiceFactory : public BrowserContextKeyedServiceFactory {
 
   static RewardsServiceFactory* GetInstance();
 
+  void SetServiceForTesting(RewardsServiceImpl* service);
+
  private:
   friend struct base::DefaultSingletonTraits<RewardsServiceFactory>;
 
@@ -33,6 +36,7 @@ class RewardsServiceFactory : public BrowserContextKeyedServiceFactory {
   content::BrowserContext* GetBrowserContextToUse(
       content::BrowserContext* context) const override;
   bool ServiceIsNULLWhileTesting() const override;
+  RewardsServiceImpl* testing_service_;
 
   DISALLOW_COPY_AND_ASSIGN(RewardsServiceFactory);
 };
