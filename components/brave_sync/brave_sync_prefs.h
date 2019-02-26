@@ -18,6 +18,10 @@ namespace base {
 class Time;
 }
 
+namespace user_prefs {
+class PrefRegistrySyncable;
+}
+
 namespace brave_sync {
 
 class Settings;
@@ -58,6 +62,8 @@ extern const char kSyncApiVersion[];
 class Prefs {
  public:
   explicit Prefs(PrefService* pref_service);
+
+  static void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry);
 
   std::string GetSeed() const;
   void SetSeed(const std::string& seed);

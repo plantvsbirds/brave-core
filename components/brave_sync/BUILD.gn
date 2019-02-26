@@ -77,14 +77,13 @@ source_set("brave_sync") {
   sources = [
     "brave_sync_service.cc",
     "brave_sync_service.h",
-    "brave_sync_service_factory.h",
-    "brave_sync_service_factory.cc",
     "brave_sync_service_observer.h",
   ]
 
   deps = [
     ":core",
     "//base",
+    "//components/browser_sync",
     "//components/bookmarks/browser",
     "//components/keyed_service/content",
     "//components/keyed_service/core",
