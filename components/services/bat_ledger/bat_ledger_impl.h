@@ -135,6 +135,7 @@ class BatLedgerImpl : public mojom::BatLedger,
       GetConfirmationsHistoryCallback callback) override;
   void GetRewardsInternalsInfo(
       GetRewardsInternalsInfoCallback callback) override;
+  void StartAutoContribute() override;
 
   void GetRecurringTips(GetRecurringTipsCallback callback) override;
 

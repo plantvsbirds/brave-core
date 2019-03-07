@@ -111,6 +111,8 @@ interface BatLedger {
       (array<string> list, uint32 number);
 
   LoadPublisherInfo(string publisher_key) => (uint32 result, string info);
+
+  StartAutoContribute();
 };
 
 interface BatLedgerClient {
