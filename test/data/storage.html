@@ -1,0 +1,119 @@
+<script>
+var indexedDBParsed = false;
+var dbParsed = false;
+
+var sessionStorageAvailable = false;
+var localStorageAvailable = false;
+var indexedDBAvailable = false;
+var dbAvailable = false;
+
+function sendMessage() {
+  if (window.domAutomationController) {
+        domAutomationController.send(true);
+  }
+}
+
+try {
+    var db = window.openDatabase("UserDetails", "1.0", "User Details", 10000);
+    db.transaction(populateDB, onDBError, onDBSuccess);
+
+    function populateDB(tx) {
+      tx.executeSql('DROP TABLE IF EXISTS DETAILS', [], onDBSuccess, onDBError);
+      tx.executeSql('CREATE TABLE IF NOT EXISTS DETAILS(id unique, log)', [], onDBSuccess, onDBError);
+    }
+
+    function onDBError(error) {
+      dbAvailable = false;
+      dbParsed = true;
+      if (indexedDBParsed) {
+        sendMessage();
+      }
+    }
+
+    function onDBSuccess(msg) {
+      dbAvailable = true;
+      dbParsed = true;
+      if (indexedDBParsed) {
+        sendMessage();
+      }
+    }
+} catch (e) {
+  dbAvailable = false;
+  dbParsed = true;
+  if (indexedDBParsed) {
+    sendMessage();
+  }
+}
+
+try {
+  var indexedDB = window.indexedDB;
+  var open = indexedDB.open("stp", 1);
+
+  open.onupgradeneeded = function(e) {
+    var db = e.target.result;
+
+    if(!db.objectStoreNames.contains("test")) {
+      var objectStore = db.createObjectStore("test", { keyPath: "id"});
+      objectStore.createIndex("title", "title", { unique: false });
+    }
+  }
+
+  open.onsuccess = function() {
+    indexedDBAvailable = true;
+    indexedDBParsed = true;
+    if (dbParsed) {
+      sendMessage();
+    }
+  }
+
+  open.onerror = function() {
+    indexedDBAvailable = false;
+    indexedDBParsed = true;
+    if (dbParsed) {
+      sendMessage();
+    }
+  }
+} catch (e) {
+  indexedDBAvailable = false;
+  indexedDBParsed = true;
+  if (dbParsed) {
+    sendMessage();
+  }
+}
+
+try {
+  localStorage.setItem("stp", "stp");
+  localStorageAvailable = true;
+} catch (e) {
+  localStorageAvailable = false;
+}
+
+try {
+  sessionStorage.setItem("stp", "stp");
+  sessionStorageAvailable = true;
+} catch (e) {
+  sessionStorageAvailable = false;
+}
+
+document.cookie = "stp=stp";
+
+function IsCookieAvailable() {
+  return document.cookie.length != 0;
+}
+
+function IsLocalStorageAvailable() {
+  return localStorageAvailable;
+}
+
+function IsSessionStorageAvailable() {
+  return sessionStorageAvailable;
+}
+
+function IsIndexedDBAvailable() {
+  return indexedDBAvailable;
+}
+
+function IsDBAvailable() {
+  return dbAvailable;  
+}
+</script>
