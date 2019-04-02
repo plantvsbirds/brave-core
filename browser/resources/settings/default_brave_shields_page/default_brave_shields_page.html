@@ -10,18 +10,21 @@
   <template>
     <style include="settings-shared md-select iron-flex">
     </style>
-    <div class="settings-box">
-      <div class="start">$i18n{adControlLabel}</div>
-      <select id="adControlType" class="md-select"
-          on-change="onAdControlChange_">
-        <template is="dom-repeat" items="[[adControlTypes_]]">
-          <option value="[[item.value]]"
-              selected="[[controlEqual(item.value, adControlType_)]]">
-            [[item.name]]
-          </option>
-        </template>
-      </select>
-    </div>
+    <settings-toggle-button id="adControlType"
+        pref="{{prefs.brave.ad_default}}"
+        label="$i18n{adControlLabel}"
+        on-settings-boolean-control-change="onAdControlChange_">
+    </settings-toggle-button>
+    <settings-toggle-button id="httpsEverywhereControlType"
+        pref="{{prefs.brave.https_everywhere_default}}"
+        label="$i18n{httpsEverywhereControlLabel}"
+        on-settings-boolean-control-change="onHTTPSEverywhereControlChange_">
+    </settings-toggle-button>
+    <settings-toggle-button id="noScriptControlType"
+        pref="{{prefs.brave.no_script_default}}"
+        label="$i18n{noScriptControlLabel}"
+        on-settings-boolean-control-change="onNoScriptControlChange_">
+    </settings-toggle-button>
     <div class="settings-box">
       <div class="start">$i18n{cookieControlLabel}</div>
       <select id="cookieControlType" class="md-select"
@@ -46,16 +49,6 @@
         </template>
       </select>
     </div>
-    <settings-toggle-button id="httpsEverywhereControlType"
-        pref="{{prefs.brave.https_everywhere_default}}"
-        label="$i18n{httpsEverywhereControlLabel}"
-        on-settings-boolean-control-change="onHTTPSEverywhereControlChange_">
-    </settings-toggle-button>
-    <settings-toggle-button id="noScriptControlType"
-        pref="{{prefs.brave.no_script_default}}"
-        label="$i18n{noScriptControlLabel}"
-        on-settings-boolean-control-change="onNoScriptControlChange_">
-    </settings-toggle-button>
   </template>
   <script src="default_brave_shields_page.js"></script>
 </dom-module>
