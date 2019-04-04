@@ -378,7 +378,7 @@ void BatClient::OnNicewareListLoaded(const std::string& pass_phrase,
 }
 
 void BatClient::continueRecover(int result,
-                                size_t *written,
+                                size_t* written,
                                 const std::vector<uint8_t>& newSeed) {
   if (result != 0 || *written == 0) {
     BLOG(ledger_, ledger::LogLevel::LOG_INFO)
