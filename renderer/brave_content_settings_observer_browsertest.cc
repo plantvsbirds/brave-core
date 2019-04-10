@@ -537,7 +537,7 @@ IN_PROC_BROWSER_TEST_F(BraveContentSettingsObserverBrowserTest,
             image_url().spec());
   EXPECT_EQ(GetLastReferrer(image_url()), iframe_url().GetOrigin().spec());
 
-  // Cross-origin navigations get their referrers stripped.
+  // Cross-origin navigations get their referrers stripped. // TODO: change this
   ASSERT_TRUE(NavigateIframeToURL(contents(), kIframeID, iframe_url()));
   ASSERT_EQ(child_frame()->GetLastCommittedURL(), iframe_url());
   EXPECT_TRUE(GetLastReferrer(iframe_url()).empty());
@@ -558,7 +558,7 @@ IN_PROC_BROWSER_TEST_F(BraveContentSettingsObserverBrowserTest, BlockReferrer) {
             image_url().spec());
   EXPECT_EQ(GetLastReferrer(image_url()), image_url().GetOrigin().spec());
 
-  // Cross-origin navigations get their referrers stripped.
+  // Cross-origin navigations get their referrers stripped. // TODO: change this
   ASSERT_TRUE(NavigateIframeToURL(contents(), kIframeID, iframe_url()));
   ASSERT_EQ(child_frame()->GetLastCommittedURL(), iframe_url());
   EXPECT_TRUE(GetLastReferrer(iframe_url()).empty());

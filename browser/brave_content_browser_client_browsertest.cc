@@ -481,7 +481,7 @@ IN_PROC_BROWSER_TEST_F(BraveContentBrowserClientReferrerTest,
   // Cross-origin navigations don't get a referrer.
   content::Referrer referrer = kReferrer;
   client()->MaybeHideReferrer(browser()->profile(),
-                              kRequestUrl, kDocumentUrl,
+                              kRequestUrl, kDocumentUrl, true,
                               &referrer);
   EXPECT_EQ(referrer.url, GURL());
 
@@ -489,7 +489,7 @@ IN_PROC_BROWSER_TEST_F(BraveContentBrowserClientReferrerTest,
   const GURL kSameOriginRequest("http://document.com/different/path");
   referrer = kReferrer;
   client()->MaybeHideReferrer(browser()->profile(),
-                              kSameOriginRequest, kDocumentUrl,
+                              kSameOriginRequest, kDocumentUrl, true,
                               &referrer);
   EXPECT_EQ(referrer.url, kDocumentUrl);
 
@@ -498,7 +498,7 @@ IN_PROC_BROWSER_TEST_F(BraveContentBrowserClientReferrerTest,
   referrer = kReferrer;
   referrer.url = kExtensionUrl;
   client()->MaybeHideReferrer(browser()->profile(),
-                              kRequestUrl, kExtensionUrl,
+                              kRequestUrl, kExtensionUrl, true,
                               &referrer);
   EXPECT_EQ(referrer.url, kExtensionUrl);
 
@@ -510,7 +510,9 @@ IN_PROC_BROWSER_TEST_F(BraveContentBrowserClientReferrerTest,
       brave_shields::kReferrers, CONTENT_SETTING_ALLOW);
   referrer = kReferrer;
   client()->MaybeHideReferrer(browser()->profile(),
-                              kRequestUrl, kDocumentUrl,
+                              kRequestUrl, kDocumentUrl, true,
                               &referrer);
   EXPECT_EQ(referrer.url, kDocumentUrl);
+
+  // TODO: add test cases for iframes
 }

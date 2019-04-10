@@ -1,14 +1,15 @@
 diff --git a/content/browser/frame_host/navigation_request.cc b/content/browser/frame_host/navigation_request.cc
-index 5bca54fa888b7cf3b12f6882003ecb334e250f63..4f7c3b2f6da072886fd7bab972324dfb8d1695b9 100644
+index 5bca54fa888b7cf3b12f6882003ecb334e250f63..d4ea736d347e908ca18ea726a7d431932bad5002 100644
 --- a/content/browser/frame_host/navigation_request.cc
 +++ b/content/browser/frame_host/navigation_request.cc
-@@ -1581,6 +1581,11 @@ void NavigationRequest::OnStartChecksComplete(
+@@ -1581,6 +1581,12 @@ void NavigationRequest::OnStartChecksComplete(
    headers.MergeFrom(navigation_handle_->TakeModifiedRequestHeaders());
    begin_params_->headers = headers.ToString();
  
 +  GetContentClient()->browser()->MaybeHideReferrer(browser_context,
 +                                                   common_params_.url,
 +                                                   top_document_url,
++                                                   frame_tree_node_->IsMainFrame(),
 +                                                   &common_params_.referrer);
 +
    loader_ = NavigationURLLoader::Create(
