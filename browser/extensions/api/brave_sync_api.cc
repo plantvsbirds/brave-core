@@ -22,7 +22,7 @@ namespace api {
 namespace {
 
 ProfileSyncService* GetProfileSyncService(BrowserContext* browser_context) {
-  return ProfileSyncServiceFactory::GetForProfile(
+  return ProfileSyncServiceFactory::GetAsProfileSyncServiceForProfile(
       Profile::FromBrowserContext(browser_context));
 }
 

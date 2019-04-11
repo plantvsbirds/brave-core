@@ -6,10 +6,9 @@ syncer::SyncCredentials GetDummyCredentials();
 AccountInfo GetDummyAccountInfo();
 }
 }
-namespace syncer {
-const int64_t kBraveDefaultShortPollIntervalSeconds = 60;
-const int64_t kBraveDefaultLongPollIntervalSeconds = 90;
-}
+
+// For use_transport_only_mode
+#define IsSyncFeatureEnabled IsBraveSyncEnabled
 #include "../../../../components/browser_sync/profile_sync_service.cc"
 
 #include "base/bind.h"
@@ -22,11 +21,17 @@ const int64_t kBraveDefaultLongPollIntervalSeconds = 90;
 #include "brave/components/brave_sync/sync_devices.h"
 #include "brave/components/brave_sync/tools.h"
 #include "brave/components/brave_sync/values_conv.h"
+#include "chrome/browser/sync/chrome_sync_client.h"
 #include "components/bookmarks/browser/bookmark_model.h"
 #include "components/sync/engine_impl/syncer.h"
 #include "content/public/browser/browser_thread.h"
 #include "net/base/network_interfaces.h"
 #include "ui/base/models/tree_node_iterator.h"
+
+namespace syncer {
+const int64_t kBraveDefaultShortPollIntervalSeconds = 60;
+const int64_t kBraveDefaultLongPollIntervalSeconds = 90;
+}
 
 namespace browser_sync {
 
@@ -524,7 +529,9 @@ void ProfileSyncService::OnGetExistingObjects(
         std::make_unique<SyncRecordAndExistingList>();
     CreateResolveList(
         *records.get(), records_and_existing_objects.get(),
-        sync_client_->GetBookmarkModel(),
+        // TODO(darkdh): find another way to obtain bookmark model
+        // change introduced in 83b9663e3814ef7e53af5009d10033b89955db44
+        static_cast<ChromeSyncClient*>(sync_client_.get())->GetBookmarkModel(),
         brave_sync_prefs_.get());
     GetBraveSyncClient()->SendResolveSyncRecords(
         category_name, std::move(records_and_existing_objects));
@@ -764,6 +771,13 @@ void ProfileSyncService::BraveEngineParamsInit(
   params->poll_sync_cycle_delegate_function =
       base::BindRepeating(&ProfileSyncService::OnPollSyncCycle,
                           sync_enabled_weak_factory_.GetWeakPtr());
+
+  params->credentials = GetDummyCredentials();
+
+  params->short_poll_interval =
+    base::TimeDelta::FromSeconds(syncer::kBraveDefaultShortPollIntervalSeconds);
+  params->long_poll_interval =
+    base::TimeDelta::FromSeconds(syncer::kBraveDefaultLongPollIntervalSeconds);
 }
 
 void ProfileSyncService::OnNudgeSyncCycle(

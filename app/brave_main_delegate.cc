@@ -26,6 +26,7 @@
 #include "chrome/common/chrome_switches.h"
 #include "components/autofill/core/common/autofill_features.h"
 #include "components/password_manager/core/common/password_manager_features.h"
+#include "components/sync/driver/sync_driver_switches.h"
 #include "components/unified_consent/feature.h"
 #include "content/public/common/content_features.h"
 #include "extensions/common/extension_features.h"
@@ -145,6 +146,9 @@ bool BraveMainDelegate::BasicStartupComplete(int* exit_code) {
       autofill::features::kAutofillServerCommunication.name,
       features::kAudioServiceOutOfProcess.name,
       features::kDefaultEnableOopRasterization.name,
+      // TODO(darkdh): remove this when USS bookmarks is mature
+      // 84919fdb99b162030a1113d5990667885b774064
+      switches::kSyncUSSBookmarks.name,
       network::features::kNetworkService.name,
       unified_consent::kUnifiedConsent.name,
   };
