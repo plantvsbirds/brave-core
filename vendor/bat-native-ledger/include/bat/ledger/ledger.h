@@ -62,6 +62,7 @@ using ConfirmationsHistoryCallback = std::function<void(
 using GetExcludedPublishersNumberDBCallback = std::function<void(uint32_t)>;
 using OnWalletPropertiesCallback = std::function<void(const ledger::Result,
                                   std::unique_ptr<ledger::WalletInfo>)>;
+using HasSufficientBalanceToReconcileCallback = std::function<void(bool)>;
 
 class LEDGER_EXPORT Ledger {
  public:
@@ -269,7 +270,8 @@ class LEDGER_EXPORT Ledger {
 
   virtual uint64_t GetBootStamp() const = 0;
 
-  virtual bool HasSufficientBalanceToReconcile() = 0;
+  virtual void HasSufficientBalanceToReconcile(
+      HasSufficientBalanceToReconcileCallback callback) = 0;
 
   virtual void GetAddressesForPaymentId(
       ledger::WalletAddressesCallback callback) = 0;

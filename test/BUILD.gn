@@ -103,6 +103,7 @@ test("brave_unit_tests") {
 
   if (brave_rewards_enabled) {
     sources += [
+      "//brave/vendor/bat-native-ledger/src/bat/ledger/internal/bat_contribution_unittest.cc",
       "//brave/vendor/bat-native-ledger/src/bat/ledger/internal/bat_get_media_unittest.cc",
       "//brave/vendor/bat-native-ledger/src/bat/ledger/internal/bat_get_media_unittest.h",
       "//brave/vendor/bat-native-ledger/src/bat/ledger/internal/bat_helper_unittest.cc",

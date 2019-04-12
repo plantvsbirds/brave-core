@@ -91,6 +91,78 @@ std::string BatContribution::GetAnonizeProof(
   return proof;
 }
 
+void BatContribution::HasSufficientBalance(
+    ledger::HasSufficientBalanceToReconcileCallback callback) {
+  ledger::ActivityInfoFilter filter = ledger_->CreateActivityFilter(
+      std::string(),
+      ledger::EXCLUDE_FILTER::FILTER_ALL_EXCEPT_EXCLUDED,
+      true,
+      ledger_->GetReconcileStamp(),
+      ledger_->GetPublisherAllowNonVerified(),
+      ledger_->GetPublisherMinVisits());
+  ledger_->GetActivityInfoList(
+      0,
+      0,
+      filter,
+      std::bind(&BatContribution::GetVerifiedAutoAmount,
+                this,
+                _1,
+                _2,
+                callback));
+}
+
+void BatContribution::GetVerifiedAutoAmount(
+    const ledger::PublisherInfoList& publisher_list,
+    uint32_t record,
+    ledger::HasSufficientBalanceToReconcileCallback callback) {
+  double total_reconcile_amount(GetAmountFromVerifiedAuto(
+      publisher_list, ledger_->GetContributionAmount()));
+  ledger_->GetRecurringTips(
+      std::bind(&BatContribution::GetVerifiedRecurringAmount,
+                this,
+                _1,
+                _2,
+                total_reconcile_amount,
+                callback));
+}
+
+// static
+double BatContribution::GetAmountFromVerifiedAuto(
+    const ledger::PublisherInfoList& publisher_list,
+    double ac_amount) {
+  double non_verified_bat = 0.0;
+  for (const auto& publisher : publisher_list) {
+    if (!publisher.verified) {
+      non_verified_bat += (publisher.percent / 100.0) * ac_amount;
+    }
+  }
+  return ac_amount - non_verified_bat;
+}
+
+void BatContribution::GetVerifiedRecurringAmount(
+    const ledger::PublisherInfoList& publisher_list,
+    uint32_t record,
+    double total_reconcile_amount,
+    ledger::HasSufficientBalanceToReconcileCallback callback) {
+  total_reconcile_amount += GetAmountFromVerifiedRecurring(publisher_list);
+  callback(ledger_->GetBalance() >= total_reconcile_amount);
+}
+
+// static
+double BatContribution::GetAmountFromVerifiedRecurring(
+    const ledger::PublisherInfoList& publisher_list) {
+  double total_recurring_amount(0.0);
+  for (const auto& publisher : publisher_list) {
+    if (publisher.id.empty()) {
+      continue;
+    }
+    if (publisher.verified) {
+      total_recurring_amount += publisher.weight;
+    }
+  }
+  return total_recurring_amount;
+}
+
 ledger::PublisherInfoList BatContribution::GetVerifiedListAuto(
     const std::string& viewing_id,
     const ledger::PublisherInfoList& list,
