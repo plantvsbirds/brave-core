@@ -38,17 +38,26 @@ source_set("js_sync_lib_impl") {
   ]
 }
 
+source_set("jslib_messages") {
+  sources = [
+    "jslib_const.cc",
+    "jslib_const.h",
+    "jslib_messages.cc",
+    "jslib_messages.h",
+    "jslib_messages_fwd.h",
+  ]
+
+  deps = [
+    "//base",
+  ]
+}
+
 source_set("core") {
   sources = [
     "bookmark_order_util.cc",
     "bookmark_order_util.h",
     "brave_sync_prefs.cc",
     "brave_sync_prefs.h",
-    "jslib_const.cc",
-    "jslib_const.h",
-    "jslib_messages.cc",
-    "jslib_messages.h",
-    "jslib_messages_fwd.h",
     "model/change_processor.h",
     "settings.cc",
     "settings.h",
@@ -61,6 +70,7 @@ source_set("core") {
   ]
 
   deps = [
+    ":jslib_messages",
     "//base",
     "//components/prefs",
     "//crypto",
