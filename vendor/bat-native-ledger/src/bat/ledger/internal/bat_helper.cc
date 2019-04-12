@@ -3093,6 +3093,15 @@ void saveToJson(JsonWriter* writer, const ledger::RewardsInternalsInfo& info) {
     saveToJson(writer, reconcile.second);
   writer->EndArray();
 
+  writer->String("persona_id");
+  writer->String(info.persona_id.c_str());
+
+  writer->String("user_id");
+  writer->String(info.user_id.c_str());
+
+  writer->String("boot_stamp");
+  writer->Uint64(info.boot_stamp);
+
   writer->EndObject();
 }
 
